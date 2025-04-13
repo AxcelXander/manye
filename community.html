@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>旅行者社区 - 慢野自驾游</title>
+    <link rel="stylesheet" href="public/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Community specific styles */
+        .community-header {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('public/images/placeholder5.jpg'); /* Placeholder - replace with relevant image */
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 80px 5%;
+            text-align: center;
+        }
+        
+        .community-header h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .community-header p {
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto 20px auto;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+        
+        .create-post-btn {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 12px 25px;
+            font-size: 1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .create-post-btn:hover {
+            background-color: #e67e22; /* Darker accent */
+        }
+        
+        .community-content {
+            padding: 40px 5%;
+            max-width: 900px; /* Narrower for feed-like structure */
+            margin: 0 auto;
+        }
+        
+        .post-feed {
+            display: grid;
+            gap: 30px;
+        }
+        
+        /* Styling for individual posts */
+        .post-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden; /* Ensure content stays within rounded corners */
+        }
+        
+        .post-author {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .author-avatar img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            margin-right: 15px;
+            object-fit: cover;
+        }
+        
+        .author-info h4 {
+            margin: 0 0 3px 0;
+            color: var(--primary-color);
+            font-size: 1rem;
+        }
+        
+        .author-info span {
+            font-size: 0.85rem;
+            color: var(--gray-color);
+        }
+        
+        .post-content {
+            padding: 20px;
+        }
+        
+        .post-content p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .post-image img {
+            max-width: 100%;
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 4px; /* Slight rounding for images */
+            margin-top: 15px;
+        }
+        
+        .post-actions {
+            padding: 10px 20px;
+            border-top: 1px solid var(--light-gray);
+            display: flex;
+            gap: 15px;
+        }
+        
+        .post-actions button {
+            background: none;
+            border: none;
+            color: var(--gray-color);
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 5px;
+            transition: color 0.3s ease;
+        }
+        
+        .post-actions button i {
+            margin-right: 5px;
+        }
+        
+        .post-actions button:hover {
+            color: var(--primary-color);
+        }
+        
+        .post-actions button.liked {
+            color: var(--accent-color); /* Indicate liked state */
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .community-header h1 {
+                font-size: 2.5rem;
+            }
+            .post-author {
+                padding: 10px 15px;
+            }
+            .post-content {
+                padding: 15px;
+            }
+            .post-actions {
+                padding: 8px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <!-- Standard Navbar -->
+        <nav class="navbar">
+            <div class="logo">
+                <h1>慢野</h1>
+                <p>探索中国中西部的自驾之旅</p>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="index.html#routes">路线推荐</a></li>
+                <li><a href="index.html#destinations">目的地</a></li>
+                <li><a href="index.html#services">服务指南</a></li>
+                <li><a href="community.html">社区</a></li>
+                <li><a href="index.html#about">关于我们</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <button class="login-btn">登录</button>
+                <button class="signup-btn">注册</button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Community Header Section -->
+        <section class="community-header">
+            <h1>旅行者社区</h1>
+            <p>分享您的自驾故事、照片和心得，与志同道合的旅友交流，发现更多旅行灵感。</p>
+            <button class="create-post-btn"><i class="fas fa-plus"></i> 分享我的旅行</button>
+        </section>
+
+        <!-- Community Feed Section -->
+        <section class="community-content">
+            <div class="post-feed">
+                <!-- Placeholder Post 1 -->
+                <div class="post-card">
+                    <div class="post-author">
+                        <div class="author-avatar">
+                            <img src="public/images/avatar1.jpg" alt="用户头像"> <!-- Placeholder -->
+                        </div>
+                        <div class="author-info">
+                            <h4>自驾小王子</h4>
+                            <span>发布于：2天前</span>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>刚刚完成了川西小环线！风景真的绝了，特别是稻城亚丁，虽然路途有点辛苦，但完全值得！强烈推荐秋天去，色彩太美了。附上几张随手拍的照片。</p>
+                        <div class="post-image">
+                            <img src="public/images/placeholder2.jpg" alt="川西风光"> <!-- Placeholder -->
+                        </div>
+                    </div>
+                    <div class="post-actions">
+                        <button class="like-btn"><i class="far fa-heart"></i> 点赞 (28)</button>
+                        <button class="comment-btn"><i class="far fa-comment"></i> 评论 (5)</button>
+                        <button class="share-btn"><i class="fas fa-share"></i> 分享</button>
+                    </div>
+                </div>
+                
+                <!-- Placeholder Post 2 -->
+                <div class="post-card">
+                    <div class="post-author">
+                        <div class="author-avatar">
+                            <img src="public/images/avatar2.jpg" alt="用户头像"> <!-- Placeholder -->
+                        </div>
+                        <div class="author-info">
+                            <h4>追风少女</h4>
+                            <span>发布于：5天前</span>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>第一次自驾去青海湖，被那里的纯净和辽阔震撼到了！环湖骑行虽然有点累，但是风景超赞。提醒大家一定要做好防晒，高原紫外线太强了！</p>
+                        <!-- No image for this post -->
+                    </div>
+                    <div class="post-actions">
+                        <button class="like-btn"><i class="far fa-heart"></i> 点赞 (45)</button>
+                        <button class="comment-btn"><i class="far fa-comment"></i> 评论 (12)</button>
+                        <button class="share-btn"><i class="fas fa-share"></i> 分享</button>
+                    </div>
+                </div>
+
+                <!-- Add more placeholder posts as needed -->
+
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <!-- Standard Footer -->
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>慢野自驾游</h3>
+                <p>探索中国中西部的自然与文化之美</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-weixin"></i></a>
+                    <a href="#"><i class="fab fa-weibo"></i></a>
+                    <a href="#"><i class="fab fa-tiktok"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>快速链接</h3>
+                <ul>
+                    <li><a href="index.html">首页</a></li>
+                    <li><a href="index.html#routes">路线推荐</a></li>
+                    <li><a href="index.html#destinations">目的地</a></li>
+                    <li><a href="index.html#services">服务指南</a></li>
+                    <li><a href="community.html">社区</a></li>
+                    <li><a href="index.html#about">关于我们</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>联系我们</h3>
+                <ul class="contact-info">
+                    <li><i class="fas fa-phone"></i> 400-123-4567</li>
+                    <li><i class="fas fa-envelope"></i> info@manye.travel</li>
+                    <li><i class="fas fa-map-marker-alt"></i> 成都市高新区天府软件园</li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>订阅通讯</h3>
+                <p>获取最新的路线推荐和旅行灵感</p>
+                <form class="subscription-form">
+                    <input type="email" placeholder="您的邮箱地址">
+                    <button type="submit">订阅</button>
+                </form>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2023 慢野自驾游 版权所有</p>
+        </div>
+    </footer>
+
+    <!-- Link to main JavaScript file -->
+    <script src="public/js/main.js"></script>
+    <script>
+        // Add specific interactivity for community page if needed
+        // For now, we can use the generic handlers in main.js or add simple alerts
+        
+        // Example: Handle 'Create Post' button click
+        const createPostBtn = document.querySelector('.create-post-btn');
+        if(createPostBtn) {
+            createPostBtn.addEventListener('click', () => {
+                alert('创建帖子的功能将在后续版本中实现！');
+                // In a real app, this might open a modal or navigate to a new page
+            });
+        }
+        
+        // Example: Handle 'Like' button click (Simple simulation)
+        const likeButtons = document.querySelectorAll('.like-btn');
+        likeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                button.classList.toggle('liked'); // Toggle liked state visually
+                // Update count (simple simulation - doesn't handle multiple clicks well)
+                let countText = button.textContent.match(/\((\d+)\)/);
+                let currentCount = countText ? parseInt(countText[1]) : 0;
+                let newCount = button.classList.contains('liked') ? currentCount + 1 : Math.max(0, currentCount - 1); // Prevent negative counts if unliking
+                
+                // Update button text (Handle case where count might not exist initially)
+                if (button.classList.contains('liked')) {
+                     button.innerHTML = `<i class="fas fa-heart"></i> 点赞 (${newCount})`; // Use filled heart
+                } else {
+                     button.innerHTML = `<i class="far fa-heart"></i> 点赞 (${newCount})`; // Use empty heart
+                }
+                
+                // Note: In a real app, you'd send a request to a server here
+                // and update the count based on the server's response.
+            });
+        });
+
+        // Add similar simple alerts for comment and share for now
+         const commentButtons = document.querySelectorAll('.comment-btn');
+         commentButtons.forEach(button => {
+             button.addEventListener('click', () => {
+                 alert('评论功能将在后续版本中实现！');
+             });
+         });
+
+         const shareButtons = document.querySelectorAll('.share-btn');
+         shareButtons.forEach(button => {
+             button.addEventListener('click', () => {
+                 alert('分享功能将在后续版本中实现！');
+             });
+         });
+
+    </script>
+</body>
+</html>

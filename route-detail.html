@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>青藏高原之旅 - 慢野自驾游</title>
+    <link rel="stylesheet" href="public/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .route-header {
+            height: 60vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('public/images/placeholder1.jpg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .route-header-content {
+            max-width: 800px;
+            padding: 0 20px;
+        }
+        
+        .route-header-content h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+        
+        .route-meta-large {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 20px 0;
+        }
+        
+        .route-meta-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .route-meta-item i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .route-navigation {
+            background-color: var(--primary-color);
+            position: sticky;
+            top: 60px;
+            z-index: 99;
+        }
+        
+        .route-navigation ul {
+            display: flex;
+            justify-content: center;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .route-navigation a {
+            display: block;
+            color: white;
+            padding: 15px 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .route-navigation a:hover,
+        .route-navigation a.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .route-section {
+            padding: 60px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .route-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+        
+        .day-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .day-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .day-content {
+            padding: 20px;
+        }
+        
+        .activities {
+            margin-top: 20px;
+        }
+        
+        .activity {
+            display: flex;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .activity:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-time {
+            min-width: 80px;
+            color: var(--gray-color);
+        }
+        
+        .activity-info {
+            flex: 1;
+        }
+        
+        .activity-info h4 {
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .tips-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .tips-list li {
+            margin-bottom: 15px;
+            padding-left: 30px;
+            position: relative;
+        }
+        
+        .tips-list li i {
+            position: absolute;
+            left: 0;
+            top: 3px;
+            color: var(--primary-color);
+        }
+        
+        .map-container {
+            height: 400px;
+            background-color: #eee;
+            margin-top: 30px;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .map-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: var(--gray-color);
+        }
+        
+        .map-placeholder i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        
+        .booking-widget {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+        
+        .booking-widget h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .booking-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .booking-form input,
+        .booking-form select {
+            padding: 10px;
+            border: 1px solid var(--light-gray);
+            border-radius: 4px;
+        }
+        
+        .booking-form button {
+            grid-column: span 2;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px;
+            border-radius: 4px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        
+        .booking-form button:hover {
+            background-color: #164959;
+        }
+        
+        @media (max-width: 768px) {
+            .route-meta-large {
+                flex-wrap: wrap;
+            }
+            
+            .route-navigation ul {
+                flex-wrap: wrap;
+            }
+            
+            .booking-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .booking-form button {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <h1>慢野</h1>
+                <p>探索中国中西部的自驾之旅</p>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="index.html#routes">路线推荐</a></li>
+                <li><a href="index.html#destinations">目的地</a></li>
+                <li><a href="index.html#services">服务指南</a></li>
+                <li><a href="index.html#community">社区</a></li>
+                <li><a href="index.html#about">关于我们</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <button class="login-btn">登录</button>
+                <button class="signup-btn">注册</button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Route Header -->
+        <section class="route-header">
+            <div class="route-header-content">
+                <h1>青藏高原之旅</h1>
+                <p>探索世界屋脊的壮丽景色，体验藏族文化的魅力</p>
+                
+                <div class="route-meta-large">
+                    <div class="route-meta-item">
+                        <i class="fas fa-calendar"></i>
+                        <span>7-10天</span>
+                    </div>
+                    <div class="route-meta-item">
+                        <i class="fas fa-road"></i>
+                        <span>2000公里</span>
+                    </div>
+                    <div class="route-meta-item">
+                        <i class="fas fa-mountain"></i>
+                        <span>高海拔</span>
+                    </div>
+                    <div class="route-meta-item">
+                        <i class="fas fa-car"></i>
+                        <span>难度: 高</span>
+                    </div>
+                    <div class="route-meta-item">
+                        <i class="fas fa-star"></i>
+                        <span>4.8/5 (24条评价)</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Route Navigation -->
+        <nav class="route-navigation">
+            <ul>
+                <li><a href="#overview" class="active">概览</a></li>
+                <li><a href="#itinerary">行程安排</a></li>
+                <li><a href="#map">路线地图</a></li>
+                <li><a href="#tips">旅行贴士</a></li>
+                <li><a href="#booking">预订</a></li>
+            </ul>
+        </nav>
+        
+        <!-- Overview Section -->
+        <section id="overview" class="route-section">
+            <h2>路线概览</h2>
+            <p>青藏高原之旅是一条穿越中国最壮丽高原的经典自驾路线，被誉为"天路"。沿途您将欣赏到高原上的蓝天白云、雪山冰川、湖泊草原等壮丽景观，以及独特的藏族文化风情。</p>
+            <p>这条路线从西宁出发，经过青海湖、昆仑山口、可可西里自然保护区，最终到达拉萨，全程约2000公里。沿途高海拔地区较多，需要做好高原反应的准备，建议安排充足的时间，慢慢欣赏沿途美景。</p>
+            
+            <div class="route-highlights">
+                <h3>路线亮点</h3>
+                <ul>
+                    <li>青海湖：中国最大的内陆湖泊，高原上的蓝宝石</li>
+                    <li>可可西里：全球海拔最高、面积最大的野生动物保护区之一</li>
+                    <li>纳木错：西藏第一大湖，世界上海拔最高的大型湖泊之一</li>
+                    <li>布达拉宫：世界上海拔最高、规模最大的宫殿</li>
+                </ul>
+            </div>
+        </section>
+        
+        <!-- Itinerary Section -->
+        <section id="itinerary" class="route-section">
+            <h2>行程安排</h2>
+            
+            <div class="day-card">
+                <div class="day-header">
+                    <h3>第一天：西宁 - 青海湖</h3>
+                    <span>行驶距离：约150公里</span>
+                </div>
+                <div class="day-content">
+                    <p>从西宁出发，沿着青藏公路向西行驶，抵达青海湖。沿途可以欣赏到高原草甸和蓝天白云的壮丽景色。</p>
+                    
+                    <div class="activities">
+                        <div class="activity">
+                            <div class="activity-time">上午</div>
+                            <div class="activity-info">
+                                <h4>西宁市区</h4>
+                                <p>游览塔尔寺，这是藏传佛教格鲁派六大寺院之一，有着悠久的历史和丰富的文化。</p>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">下午</div>
+                            <div class="activity-info">
+                                <h4>前往青海湖</h4>
+                                <p>沿着青藏公路向西行驶，抵达青海湖。途中经过日月山，可停车观景。</p>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">傍晚</div>
+                            <div class="activity-info">
+                                <h4>青海湖日落</h4>
+                                <p>在青海湖边欣赏日落美景，拍摄高原上的绝美晚霞。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-header">
+                    <h3>第二天：青海湖 - 茶卡盐湖</h3>
+                    <span>行驶距离：约200公里</span>
+                </div>
+                <div class="day-content">
+                    <p>早晨在青海湖边欣赏日出，之后前往茶卡盐湖，这个被称为"天空之镜"的盐湖是摄影爱好者的天堂。</p>
+                    
+                    <div class="activities">
+                        <div class="activity">
+                            <div class="activity-time">上午</div>
+                            <div class="activity-info">
+                                <h4>青海湖日出</h4>
+                                <p>早起欣赏青海湖日出，感受高原清晨的宁静。然后自驾环湖，停留二郎剑景区。</p>
+                            </div>
+                        </div>
+                        <div class="activity">
+                            <div class="activity-time">下午</div>
+                            <div class="activity-info">
+                                <h4>前往茶卡盐湖</h4>
+                                <p>向西南方向行驶抵达茶卡盐湖，这里被誉为"天空之镜"，是摄影爱好者的天堂。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="day-card">
+                <div class="day-header">
+                    <h3>第三天：茶卡盐湖 - 格尔木</h3>
+                    <span>行驶距离：约350公里</span>
+                </div>
+                <div class="day-content">
+                    <p>从茶卡盐湖出发，途经都兰，抵达格尔木。沿途将穿越祁连山区，风景秀美。</p>
+                </div>
+            </div>
+            
+            <div class="view-more">
+                <button>查看完整7天行程</button>
+            </div>
+        </section>
+        
+        <!-- Map Section -->
+        <section id="map" class="route-section">
+            <h2>路线地图</h2>
+            
+            <div class="map-container">
+                <div class="map-placeholder">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <p>在此显示完整路线地图</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Tips Section -->
+        <section id="tips" class="route-section">
+            <h2>旅行贴士</h2>
+            
+            <ul class="tips-list">
+                <li>
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>高原反应：</strong>路线多在3000米以上的高原地区，请做好高原反应的预防措施，建议提前服用红景天等药物，保持充足休息，避免剧烈运动。
+                </li>
+                <li>
+                    <i class="fas fa-sun"></i>
+                    <strong>防晒措施：</strong>高原地区紫外线强烈，请做好防晒措施，戴墨镜、帽子，涂防晒霜。
+                </li>
+                <li>
+                    <i class="fas fa-gas-pump"></i>
+                    <strong>加油站：</strong>高原地区加油站较少，请务必在城镇及时加满油，建议携带备用油桶。
+                </li>
+                <li>
+                    <i class="fas fa-car-battery"></i>
+                    <strong>车辆检查：</strong>出发前请对车辆进行全面检查，特别是轮胎、刹车、冷却系统和氧传感器等。
+                </li>
+                <li>
+                    <i class="fas fa-satellite-dish"></i>
+                    <strong>通信设备：</strong>部分地区信号较弱，建议下载离线地图，携带卫星电话。
+                </li>
+                <li>
+                    <i class="fas fa-tshirt"></i>
+                    <strong>衣物准备：</strong>即使在夏季，高原地区昼夜温差大，请准备足够的保暖衣物。
+                </li>
+            </ul>
+        </section>
+        
+        <!-- Booking Section -->
+        <section id="booking" class="route-section">
+            <h2>预订信息</h2>
+            
+            <div class="booking-widget">
+                <h3>预订此路线</h3>
+                <div class="booking-form">
+                    <input type="text" placeholder="姓名">
+                    <input type="tel" placeholder="联系电话">
+                    <input type="email" placeholder="电子邮箱">
+                    <select>
+                        <option>选择出发日期</option>
+                        <option>2023年7月15日</option>
+                        <option>2023年7月22日</option>
+                        <option>2023年8月5日</option>
+                        <option>2023年8月12日</option>
+                    </select>
+                    <select>
+                        <option>人数</option>
+                        <option>1人</option>
+                        <option>2人</option>
+                        <option>3人</option>
+                        <option>4人或更多</option>
+                    </select>
+                    <select>
+                        <option>行程天数</option>
+                        <option>7天</option>
+                        <option>10天</option>
+                    </select>
+                    <button type="submit">提交预订</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>慢野</h3>
+                <p>探索中国中西部的自驾之旅</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-weixin"></i></a>
+                    <a href="#"><i class="fab fa-weibo"></i></a>
+                    <a href="#"><i class="fab fa-qq"></i></a>
+                    <a href="#"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>快速链接</h3>
+                <ul>
+                    <li><a href="index.html">首页</a></li>
+                    <li><a href="index.html#routes">路线推荐</a></li>
+                    <li><a href="index.html#destinations">目的地</a></li>
+                    <li><a href="index.html#services">服务指南</a></li>
+                    <li><a href="index.html#community">社区</a></li>
+                    <li><a href="index.html#about">关于我们</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>联系我们</h3>
+                <p><i class="fas fa-envelope"></i> contact@manye.com</p>
+                <p><i class="fas fa-phone"></i> +86 123 4567 8901</p>
+                <p><i class="fas fa-map-marker-alt"></i> 中国 北京市 海淀区</p>
+            </div>
+            <div class="footer-section">
+                <h3>订阅更新</h3>
+                <p>获取最新的旅行资讯和优惠信息</p>
+                <div class="subscribe-form">
+                    <input type="email" placeholder="输入您的邮箱地址">
+                    <button type="submit">订阅</button>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 慢野自驾游. 保留所有权利.</p>
+        </div>
+    </footer>
+
+    <script src="public/js/main.js"></script>
+    <script>
+        // Add active class to navigation links on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('.route-section');
+            const navLinks = document.querySelectorAll('.route-navigation a');
+            
+            window.addEventListener('scroll', function() {
+                let current = '';
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop - 100;
+                    const sectionHeight = section.clientHeight;
+                    
+                    if (window.pageYOffset >= sectionTop) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').slice(1) === current) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+            
+            // Smooth scrolling for route navigation
+            navLinks.forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 70,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

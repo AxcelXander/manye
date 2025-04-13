@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>慢野 - 中西部自驾游平台</title>
+    <link rel="stylesheet" href="public/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <h1>慢野</h1>
+                <p>探索中国中西部的自驾之旅</p>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">首页</a></li>
+                <li><a href="#routes">路线推荐</a></li>
+                <li><a href="#destinations">目的地</a></li>
+                <li><a href="#services">服务指南</a></li>
+                <li><a href="#community">社区</a></li>
+                <li><a href="#about">关于我们</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <button class="login-btn">登录</button>
+                <button class="signup-btn">注册</button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h1>探索未知的旅程</h1>
+                <p>发现中国中西部的自然风光与人文景观</p>
+                <div class="search-container">
+                    <input type="text" placeholder="搜索目的地、路线或景点...">
+                    <button type="submit">搜索</button>
+                </div>
+                <div class="hero-buttons">
+                    <button class="primary-btn">规划我的旅程</button>
+                    <button class="secondary-btn">探索热门路线</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Routes Section -->
+        <section id="routes" class="routes-section">
+            <div class="section-header">
+                <h2>精选路线</h2>
+                <p>发现中西部地区最受欢迎的自驾路线</p>
+            </div>
+            <div class="routes-container">
+                <div class="route-card">
+                    <div class="route-image">
+                        <img src="public/images/placeholder1.jpg" alt="青藏高原路线">
+                    </div>
+                    <div class="route-info">
+                        <h3>青藏高原之旅</h3>
+                        <p>探索世界屋脊的壮丽景色，体验藏族文化的魅力</p>
+                        <div class="route-meta">
+                            <span><i class="fas fa-calendar"></i> 7-10天</span>
+                            <span><i class="fas fa-road"></i> 2000公里</span>
+                            <span><i class="fas fa-mountain"></i> 高海拔</span>
+                        </div>
+                        <button>查看详情</button>
+                    </div>
+                </div>
+                <div class="route-card">
+                    <div class="route-image">
+                        <img src="public/images/placeholder2.jpg" alt="川西高原路线">
+                    </div>
+                    <div class="route-info">
+                        <h3>川西高原自然之旅</h3>
+                        <p>穿越川西高原，欣赏雪山、草原和湖泊的完美组合</p>
+                        <div class="route-meta">
+                            <span><i class="fas fa-calendar"></i> 5-7天</span>
+                            <span><i class="fas fa-road"></i> 1500公里</span>
+                            <span><i class="fas fa-mountain"></i> 中高海拔</span>
+                        </div>
+                        <button>查看详情</button>
+                    </div>
+                </div>
+                <div class="route-card">
+                    <div class="route-image">
+                        <img src="public/images/placeholder3.jpg" alt="丝绸之路路线">
+                    </div>
+                    <div class="route-info">
+                        <h3>丝绸之路历史文化之旅</h3>
+                        <p>追寻古丝绸之路的足迹，探索西部地区的历史文化遗产</p>
+                        <div class="route-meta">
+                            <span><i class="fas fa-calendar"></i> 10-15天</span>
+                            <span><i class="fas fa-road"></i> 3000公里</span>
+                            <span><i class="fas fa-sun"></i> 沙漠气候</span>
+                        </div>
+                        <button>查看详情</button>
+                    </div>
+                </div>
+            </div>
+            <div class="view-more">
+                <button>查看更多路线</button>
+            </div>
+        </section>
+
+        <!-- Destinations Section -->
+        <section id="destinations" class="destinations-section">
+            <div class="section-header">
+                <h2>热门目的地</h2>
+                <p>中西部地区值得一去的旅游胜地</p>
+            </div>
+            <div class="destinations-container">
+                <div class="destination-card">
+                    <img src="public/images/placeholder4.jpg" alt="青海湖">
+                    <div class="destination-overlay">
+                        <h3>青海湖</h3>
+                        <p>中国最大的内陆湖泊，高原上的蓝宝石</p>
+                        <button>探索</button>
+                    </div>
+                </div>
+                <div class="destination-card">
+                    <img src="public/images/placeholder5.jpg" alt="九寨沟">
+                    <div class="destination-overlay">
+                        <h3>九寨沟</h3>
+                        <p>五彩斑斓的湖泊和瀑布，如人间仙境</p>
+                        <button>探索</button>
+                    </div>
+                </div>
+                <div class="destination-card">
+                    <img src="public/images/placeholder6.jpg" alt="敦煌莫高窟">
+                    <div class="destination-overlay">
+                        <h3>敦煌莫高窟</h3>
+                        <p>中国佛教艺术宝库，千年文化遗产</p>
+                        <button>探索</button>
+                    </div>
+                </div>
+                <div class="destination-card">
+                    <img src="public/images/placeholder7.jpg" alt="张家界">
+                    <div class="destination-overlay">
+                        <h3>张家界</h3>
+                        <p>奇峰异石，悬浮山峰的自然奇观</p>
+                        <button>探索</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="services-section">
+            <div class="section-header">
+                <h2>自驾服务</h2>
+                <p>我们提供的全方位自驾旅游支持</p>
+            </div>
+            <div class="services-container">
+                <div class="service-card">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <h3>路线规划</h3>
+                    <p>根据您的喜好和时间，智能规划最适合的自驾路线</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-hotel"></i>
+                    <h3>住宿推荐</h3>
+                    <p>为您推荐沿途优质住宿，满足不同预算需求</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-utensils"></i>
+                    <h3>美食指南</h3>
+                    <p>发现沿途特色美食，品尝地道风味</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-car-crash"></i>
+                    <h3>安全保障</h3>
+                    <p>提供紧急救援信息，确保您的自驾旅行安全顺利</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-gas-pump"></i>
+                    <h3>补给站点</h3>
+                    <p>沿途加油站、服务区等重要补给点信息</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-phone-alt"></i>
+                    <h3>在线咨询</h3>
+                    <p>旅途中遇到问题，随时在线咨询获取帮助</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Community Section -->
+        <section id="community" class="community-section">
+            <div class="section-header">
+                <h2>旅行社区</h2>
+                <p>分享您的旅行故事，获取其他旅行者的宝贵经验</p>
+            </div>
+            <div class="community-container">
+                <div class="community-posts">
+                    <div class="post-card">
+                        <div class="post-user">
+                            <img src="public/images/user1.jpg" alt="用户头像">
+                            <div class="user-info">
+                                <h4>张三</h4>
+                                <span>发布于 2小时前</span>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            <p>刚刚完成了青藏高原之旅，分享一些美丽的风景照片和实用的旅行建议！</p>
+                            <div class="post-images">
+                                <img src="public/images/post1.jpg" alt="青藏高原风景">
+                                <img src="public/images/post2.jpg" alt="青藏高原风景">
+                            </div>
+                        </div>
+                        <div class="post-actions">
+                            <button><i class="fas fa-heart"></i> 点赞 (24)</button>
+                            <button><i class="fas fa-comment"></i> 评论 (8)</button>
+                            <button><i class="fas fa-share"></i> 分享</button>
+                        </div>
+                    </div>
+                    <div class="post-card">
+                        <div class="post-user">
+                            <img src="public/images/user2.jpg" alt="用户头像">
+                            <div class="user-info">
+                                <h4>李四</h4>
+                                <span>发布于 1天前</span>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            <p>有人去过川西高原吗？想咨询一下7月去是否合适，以及有什么注意事项？</p>
+                        </div>
+                        <div class="post-actions">
+                            <button><i class="fas fa-heart"></i> 点赞 (12)</button>
+                            <button><i class="fas fa-comment"></i> 评论 (15)</button>
+                            <button><i class="fas fa-share"></i> 分享</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="community-sidebar">
+                    <div class="sidebar-section">
+                        <h3>热门话题</h3>
+                        <ul>
+                            <li>#青藏高原</li>
+                            <li>#川西自驾</li>
+                            <li>#丝路文化</li>
+                            <li>#高海拔旅行</li>
+                            <li>#自驾安全</li>
+                        </ul>
+                    </div>
+                    <div class="sidebar-section">
+                        <h3>加入社区</h3>
+                        <p>分享您的旅行经历，与其他自驾爱好者交流互动</p>
+                        <button class="primary-btn">立即加入</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="about-section">
+            <div class="section-header">
+                <h2>关于慢野</h2>
+                <p>我们的使命和团队</p>
+            </div>
+            <div class="about-container">
+                <div class="about-mission">
+                    <h3>我们的使命</h3>
+                    <p>慢野致力于宣传中国中西部地区的旅游资源，为自驾游爱好者提供全面的信息和服务支持，促进中西部地区旅游业的发展，增进地区交流，推动区域经济均衡发展。</p>
+                    <p>我们相信，自驾旅行是探索中国中西部地区美丽风景和丰富文化的最佳方式。通过我们的平台，您可以深入了解中国的多样性和魅力，发现更多不为人知的美丽角落。</p>
+                </div>
+                <div class="about-team">
+                    <h3>我们的团队</h3>
+                    <p>慢野团队由一群热爱旅行、熟悉中西部地区的年轻人组成。我们拥有创新思维和创业激情，致力于为自驾游爱好者提供最优质的服务。</p>
+                    <div class="team-members">
+                        <div class="team-member">
+                            <img src="public/images/team1.jpg" alt="王安楠">
+                            <h4>王安楠</h4>
+                            <p>团队负责人</p>
+                        </div>
+                        <div class="team-member">
+                            <img src="public/images/team2.jpg" alt="李泓">
+                            <h4>李泓</h4>
+                            <p>内容管理</p>
+                        </div>
+                        <div class="team-member">
+                            <img src="public/images/team3.jpg" alt="颜枫颖">
+                            <h4>颜枫颖</h4>
+                            <p>网站开发</p>
+                        </div>
+                        <div class="team-member">
+                            <img src="public/images/team4.jpg" alt="马紫嫣">
+                            <h4>马紫嫣</h4>
+                            <p>数据收集</p>
+                        </div>
+                        <div class="team-member">
+                            <img src="public/images/team5.jpg" alt="张书瑜">
+                            <h4>张书瑜</h4>
+                            <p>市场调研</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>慢野</h3>
+                <p>探索中国中西部的自驾之旅</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-weixin"></i></a>
+                    <a href="#"><i class="fab fa-weibo"></i></a>
+                    <a href="#"><i class="fab fa-qq"></i></a>
+                    <a href="#"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>快速链接</h3>
+                <ul>
+                    <li><a href="#home">首页</a></li>
+                    <li><a href="#routes">路线推荐</a></li>
+                    <li><a href="#destinations">目的地</a></li>
+                    <li><a href="#services">服务指南</a></li>
+                    <li><a href="#community">社区</a></li>
+                    <li><a href="#about">关于我们</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>联系我们</h3>
+                <p><i class="fas fa-envelope"></i> contact@manye.com</p>
+                <p><i class="fas fa-phone"></i> +86 123 4567 8901</p>
+                <p><i class="fas fa-map-marker-alt"></i> 中国 北京市 海淀区</p>
+            </div>
+            <div class="footer-section">
+                <h3>订阅更新</h3>
+                <p>获取最新的旅行资讯和优惠信息</p>
+                <div class="subscribe-form">
+                    <input type="email" placeholder="输入您的邮箱地址">
+                    <button type="submit">订阅</button>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 慢野自驾游. 保留所有权利.</p>
+        </div>
+    </footer>
+
+    <script src="public/js/main.js"></script>
+</body>
+</html> 

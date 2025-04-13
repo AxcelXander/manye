@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>路线规划服务 - 慢野自驾游</title>
+    <link rel="stylesheet" href="public/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .service-header {
+            background-color: var(--light-color);
+            padding: 60px 5%;
+            text-align: center;
+        }
+        
+        .service-header i {
+            font-size: 4rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .service-header h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .service-header p {
+            max-width: 800px;
+            margin: 0 auto;
+            color: var(--gray-color);
+        }
+        
+        .service-section {
+            padding: 60px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .service-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .feature-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .feature-card i {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        .steps-container {
+            margin-top: 40px;
+        }
+        
+        .step {
+            display: flex;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 60px;
+            left: 25px;
+            height: calc(100% - 40px);
+            width: 2px;
+            background-color: var(--light-gray);
+        }
+        
+        .step-number {
+            min-width: 50px;
+            height: 50px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-right: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-content h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .faq-container {
+            margin-top: 40px;
+        }
+        
+        .faq-item {
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--light-gray);
+            padding-bottom: 20px;
+        }
+        
+        .faq-question {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .faq-question i {
+            transition: all 0.3s ease;
+        }
+        
+        .faq-answer {
+            display: none;
+            color: var(--gray-color);
+            padding: 10px 0;
+        }
+        
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+        
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+        
+        .cta-section {
+            background-color: var(--light-color);
+            padding: 60px 5%;
+            text-align: center;
+            margin-top: 60px;
+        }
+        
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .cta-content h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <h1>慢野</h1>
+                <p>探索中国中西部的自驾之旅</p>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="index.html#routes">路线推荐</a></li>
+                <li><a href="index.html#destinations">目的地</a></li>
+                <li><a href="index.html#services">服务指南</a></li>
+                <li><a href="index.html#community">社区</a></li>
+                <li><a href="index.html#about">关于我们</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <button class="login-btn">登录</button>
+                <button class="signup-btn">注册</button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Service Header -->
+        <section class="service-header">
+            <i class="fas fa-map-marked-alt"></i>
+            <h1>路线规划服务</h1>
+            <p>根据您的喜好和时间，我们为您量身定制专属自驾路线，让您的旅行更加顺畅和难忘</p>
+        </section>
+        
+        <!-- Features Section -->
+        <section class="service-section">
+            <h2>服务特点</h2>
+            <p>我们的路线规划服务考虑到旅行的各个方面，为您提供全面、细致的规划方案。</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <i class="fas fa-user-alt"></i>
+                    <h3>个性化定制</h3>
+                    <p>根据您的兴趣、喜好、时间和预算，为您量身定制专属路线，满足不同需求。</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-road"></i>
+                    <h3>最优路线</h3>
+                    <p>利用大数据和算法，结合实时路况，为您规划最优行驶路线，避开拥堵和危险路段。</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-clock"></i>
+                    <h3>时间规划</h3>
+                    <p>科学安排参观时间，合理分配游览与休息时间，让您的旅程更加舒适。</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-camera"></i>
+                    <h3>景点推荐</h3>
+                    <p>根据季节和天气，推荐最佳景点和观景位置，捕捉每一处完美瞬间。</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-utensils"></i>
+                    <h3>餐饮住宿</h3>
+                    <p>推荐沿途特色餐厅和优质住宿，让您品尝地道美食，享受舒适休息。</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h3>手机导航</h3>
+                    <p>将规划好的路线导入手机导航，随时查看和调整，轻松出行。</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- How It Works Section -->
+        <section class="service-section">
+            <h2>服务流程</h2>
+            <p>我们的路线规划服务流程简单透明，为您提供便捷的体验。</p>
+            
+            <div class="steps-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>提交需求</h3>
+                        <p>在我们的平台上填写您的旅行目的地、时间、兴趣爱好和特殊需求等信息。您可以通过在线表单或与我们的旅行顾问直接沟通来提交需求。</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>需求评估</h3>
+                        <p>我们的旅行专家将评估您的需求，并考虑季节、天气、路况等因素，确定最适合您的旅行时间和路线。我们会与您沟通，确保我们理解您的期望。</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>路线设计</h3>
+                        <p>根据您的需求和我们的专业知识，设计详细的行程路线，包括每天的行驶路线、游览景点、推荐活动、用餐和住宿安排等。</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>方案确认</h3>
+                        <p>我们会将初步方案发送给您审阅，并根据您的反馈进行调整和完善，直到您满意为止。在这个阶段，您可以提出任何疑问或修改建议。</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h3>预订服务</h3>
+                        <p>根据您的要求，我们可以帮助您预订沿途的住宿、景点门票和特色体验活动，确保您的旅行顺利进行。</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">6</div>
+                    <div class="step-content">
+                        <h3>旅行支持</h3>
+                        <p>在您的旅行期间，我们提供24小时在线支持，随时解答您的问题，并根据实时情况提供建议和调整方案。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- FAQ Section -->
+        <section class="service-section">
+            <h2>常见问题</h2>
+            <p>关于路线规划服务的常见问题解答，帮助您更好地了解我们的服务。</p>
+            
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>路线规划服务需要多长时间完成？</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>通常情况下，一个完整的路线规划需要3-5个工作日完成。对于复杂的长途旅行或特殊需求，可能需要更长时间。如果您有紧急需求，请在提交申请时说明，我们会尽量为您加快进度。</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>路线规划服务收费标准是怎样的？</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>我们的基础路线规划服务起价为¥299，具体费用取决于旅行天数、路线复杂度和是否需要额外服务（如预订服务、紧急支持等）。您可以通过我们的在线价格计算器获取精确报价，或直接联系我们的客服团队咨询。</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>我可以修改已经确认的路线吗？</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>是的，您可以在出发前随时提出修改需求。首次修改是免费的，之后每次修改可能会收取少量服务费。我们理解旅行计划可能会因各种原因变更，我们会尽量满足您的修改需求。</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>如果我对规划的路线不满意怎么办？</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>我们提供满意保障。如果您对我们提供的方案不满意，我们会根据您的反馈进行调整和优化，直到您满意为止。如果经过多次调整后仍无法满足您的期望，我们提供全额退款服务。</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>路线规划包含哪些具体内容？</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>我们的路线规划包括：详细的每日行程安排、行驶路线指南（包括路况和导航信息）、推荐景点和活动、用餐和住宿推荐、必要的交通和安全信息、季节性提示和建议等。您可以根据需要选择是否包含预订服务。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Testimonials -->
+        <section class="service-section">
+            <h2>用户评价</h2>
+            <p>来自其他自驾爱好者的真实评价，分享他们使用我们的路线规划服务的体验。</p>
+            
+            <div class="testimonials-slider">
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"慢野的路线规划服务非常棒！他们为我们策划的青海湖-茶卡盐湖自驾之旅完美平衡了风景欣赏和休息时间，避开了旅游旺季的拥堵路段，推荐的当地特色餐厅也非常地道。"</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="public/images/avatar1.jpg" alt="用户头像">
+                        <div class="author-info">
+                            <h4>张先生</h4>
+                            <p>北京 | 青海湖自驾游</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"作为一个摄影爱好者，我很感谢慢野的路线规划团队考虑到了最佳的拍摄时间和角度。他们推荐的几个鲜为人知的观景点让我拍到了令人惊叹的照片，绝对超出了我的期望！"</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="public/images/avatar2.jpg" alt="用户头像">
+                        <div class="author-info">
+                            <h4>李女士</h4>
+                            <p>上海 | 川西高原自驾游</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"带着两个孩子自驾本来很担心，但慢野的路线安排非常人性化，考虑到了孩子的需求，每天的行程不会太赶，休息点也都很适合家庭。孩子们玩得很开心，我们也不会太累，真的很感谢！"</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="public/images/avatar3.jpg" alt="用户头像">
+                        <div class="author-info">
+                            <h4>王先生</h4>
+                            <p>广州 | 张家界自驾游</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <div class="cta-content">
+                <h2>准备开始您的完美自驾之旅？</h2>
+                <p>让我们帮您规划一条专属于您的精彩路线，开启一段难忘的旅程。</p>
+                <div class="cta-buttons">
+                    <button class="primary-btn">立即咨询</button>
+                    <button class="secondary-btn">查看样例路线</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>慢野自驾游</h3>
+                <p>探索中国中西部的自然与文化之美</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-weixin"></i></a>
+                    <a href="#"><i class="fab fa-weibo"></i></a>
+                    <a href="#"><i class="fab fa-tiktok"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>快速链接</h3>
+                <ul>
+                    <li><a href="index.html">首页</a></li>
+                    <li><a href="index.html#routes">路线推荐</a></li>
+                    <li><a href="index.html#destinations">目的地</a></li>
+                    <li><a href="index.html#services">服务指南</a></li>
+                    <li><a href="index.html#community">社区</a></li>
+                    <li><a href="index.html#about">关于我们</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>联系我们</h3>
+                <ul class="contact-info">
+                    <li><i class="fas fa-phone"></i> 400-123-4567</li>
+                    <li><i class="fas fa-envelope"></i> info@manye.travel</li>
+                    <li><i class="fas fa-map-marker-alt"></i> 成都市高新区天府软件园</li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>订阅通讯</h3>
+                <p>获取最新的路线推荐和旅行灵感</p>
+                <form class="subscription-form">
+                    <input type="email" placeholder="您的邮箱地址">
+                    <button type="submit">订阅</button>
+                </form>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2023 慢野自驾游 版权所有</p>
+        </div>
+    </footer>
+
+    <script>
+        // 处理FAQ展开/收起的交互
+        document.addEventListener('DOMContentLoaded', function() {
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                
+                question.addEventListener('click', () => {
+                    // 切换当前问题的激活状态
+                    item.classList.toggle('active');
+                    
+                    // 关闭其他打开的问题（可选，取消注释以启用此功能）
+                    // faqItems.forEach(otherItem => {
+                    //     if(otherItem !== item && otherItem.classList.contains('active')) {
+                    //         otherItem.classList.remove('active');
+                    //     }
+                    // });
+                });
+            });
+        });
+    </script>
+</body>
+</html> 
