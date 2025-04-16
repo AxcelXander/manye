@@ -1,0 +1,24 @@
+{
+  "name": "manye-travel",
+  "version": "1.0.0",
+  "description": "Manye Self-Driving Tourism Website",
+  "main": "index.js",
+  "scripts": {
+    "start": "http-server",
+    "build": "mkdir -p dist && cp -r *.html public src dist/",
+    "deploy": "firebase deploy"
+  },
+  "keywords": [
+    "tourism",
+    "travel",
+    "self-driving"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "http-server": "^14.1.1"
+  },
+  "devDependencies": {
+    "firebase-tools": "^12.0.0"
+  }
+} 
