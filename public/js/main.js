@@ -222,20 +222,23 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     function initializeSearchFunctionality() {
         const searchForm = document.querySelector('.search-container');
-        const searchInput = searchForm.querySelector('input');
-        const searchButton = searchForm.querySelector('button');
-        
-        searchButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            const searchTerm = searchInput.value.trim();
+        // Check if the search form exists on the current page
+        if (searchForm) {
+            const searchInput = searchForm.querySelector('input');
+            const searchButton = searchForm.querySelector('button');
             
-            if (searchTerm) {
-                // In a real app, this would perform a search
-                alert(`您搜索的内容: "${searchTerm}"，搜索功能将在完整应用中实现！`);
-            } else {
-                alert('请输入搜索内容');
-            }
-        });
+            searchButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                const searchTerm = searchInput.value.trim();
+                
+                if (searchTerm) {
+                    // In a real app, this would perform a search
+                    alert(`您搜索的内容: "${searchTerm}"，搜索功能将在完整应用中实现！`);
+                } else {
+                    alert('请输入搜索内容');
+                }
+            });
+        }
     }
     
     // Add smooth scrolling for navigation links
