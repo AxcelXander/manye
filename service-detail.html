@@ -1374,112 +1374,113 @@
         function searchRoute(start, end, planRouteBtn) {
             return new Promise((resolve, reject) => {
                 console.log('开始规划路线，起点:', start, '终点:', end);
-                
-                // 检查是否为坐标对象，将其转换为字符串
-                const startPoint = start instanceof AMap.LngLat ? 
-                    start.lng + ',' + start.lat : 
-                    (typeof start === 'object' && start.lng ? start.lng + ',' + start.lat : start);
-                    
-                const endPoint = end instanceof AMap.LngLat ? 
-                    end.lng + ',' + end.lat : 
-                    (typeof end === 'object' && end.lng ? end.lng + ',' + end.lat : end);
-                
-                console.log('格式化后的起点:', startPoint, '终点:', endPoint);
-                
-                // 判断是否应该直接使用Web服务API (REMOVE THIS CHECK)
-                if (!window.drivingService || typeof window.drivingService.search !== 'function') {
-                    console.error('驾车服务不可用');
-                     // 重置按钮状态
-                    if (planRouteBtn) {
-                        planRouteBtn.disabled = false;
-                        planRouteBtn.innerHTML = '规划路线';
-                    }
-                    reject(new Error('驾车服务未初始化')); // Reject instead of fallback
-                    return;
-                }
 
-                // 设置计时器，5秒后如果没有响应，报告错误
+                // 检查是否为坐标对象，将其转换为字符串
+                const startPoint = start instanceof AMap.LngLat ?
+                    start.lng + ',' + start.lat :
+                    (typeof start === 'object' && start.lng ? start.lng + ',' + start.lat : start);
+
+                const endPoint = end instanceof AMap.LngLat ?
+                    end.lng + ',' + end.lat :
+                    (typeof end === 'object' && end.lng ? end.lng + ',' + end.lat : end);
+
+                console.log('格式化后的起点:', startPoint, '终点:', endPoint);
+
+                // 设置计时器，15秒后如果没有响应，报告错误
                 const timeoutId = setTimeout(() => {
-                    console.error('JavaScript API路线规划超时');
+                    console.error('JavaScript API路线规划超时 (15s)'); // Indicate timeout duration
                      // 重置按钮状态
                     if (planRouteBtn) {
                         planRouteBtn.disabled = false;
                         planRouteBtn.innerHTML = '规划路线';
                     }
-                    reject(new Error('路线规划请求超时')); // Reject instead of fallback
-                }, 8000); // Increase timeout slightly
-                
-                // 尝试使用JavaScript API规划路线
-                try {
-                    // 设置驾车参数
-                    window.drivingService.search(
-                        startPoint, 
-                        endPoint, 
-                        { extensions: 'all' },
-                        function(status, result) {
-                            // 请求已返回，清除超时
-                            clearTimeout(timeoutId);
-                            
-                            console.log('路线规划状态:', status);
-                            console.log('路线规划结果:', result);
-                            
-                            // 重置按钮状态
-                            if (planRouteBtn) {
-                                planRouteBtn.disabled = false;
-                                planRouteBtn.innerHTML = '规划路线';
-                            }
-                            
-                            if (status === 'complete') {
-                                if (result.routes && result.routes.length) {
-                                    console.log('成功获取路线，正在绘制...');
-                                    try {
-                                        // 绘制路线
-                                        window.drivingService.clear(); // 先清除之前的路线
-                                        window.drivingService.drawRoute(result.routes[0]);
-                                        
-                                        // 设置地图视野
-                                        window.routeMap.setFitView();
-                                        
-                                        // 更新路线信息面板
-                                        updateRouteInfoPanel(result.routes[0], 
-                                            typeof start === 'string' ? start : '已选位置', 
-                                            typeof end === 'string' ? end : '已选位置');
-                                        
-                                        // 显示规划结果
-                                        const routeItems = document.querySelectorAll('.route-item');
-                                        routeItems.forEach(item => {
-                                            item.style.display = 'block';
-                                        });
-                                        
-                                        resolve(result);
-                                    } catch (drawError) {
-                                        console.error('绘制路线时出错:', drawError);
-                                        reject(new Error('绘制路线失败: ' + drawError.message)); // Reject instead of fallback
-                                    }
-                                } else {
-                                    console.error('未找到路线结果');
-                                    reject(new Error('未找到合适的路线: ' + (result.info || '未知错误'))); // Reject instead of fallback
+                    reject(new Error('路线规划请求超时 (15s)')); // Reject instead of fallback
+                }, 15000); // Increase timeout to 15 seconds
+
+                // 确认 drivingService 存在才调用 search
+                if (window.drivingService && typeof window.drivingService.search === 'function') {
+                    // 尝试使用JavaScript API规划路线
+                    try {
+                        // 设置驾车参数
+                        window.drivingService.search(
+                            startPoint,
+                            endPoint,
+                            { extensions: 'all' },
+                            function(status, result) {
+                                // 请求已返回，清除超时
+                                clearTimeout(timeoutId);
+
+                                console.log('路线规划状态:', status);
+                                console.log('路线规划结果:', result);
+
+                                // 重置按钮状态
+                                if (planRouteBtn) {
+                                    planRouteBtn.disabled = false;
+                                    planRouteBtn.innerHTML = '规划路线';
                                 }
-                            } else if (status === 'error') {
-                                console.error('路线规划失败:', result.info || '未知错误');
-                                reject(new Error('路线规划失败: ' + (result.info || '未知错误'))); // Reject instead of fallback
-                            } else { // no_data or other statuses
-                                console.error('路线规划无结果:', status, result.info);
-                                reject(new Error('路线规划无结果: ' + (result.info || status))); // Reject instead of fallback
+
+                                if (status === 'complete') {
+                                    if (result.routes && result.routes.length) {
+                                        console.log('成功获取路线，正在绘制...');
+                                        try {
+                                            // 绘制路线
+                                            window.drivingService.clear(); // 先清除之前的路线
+                                            window.drivingService.drawRoute(result.routes[0]);
+
+                                            // 设置地图视野
+                                            window.routeMap.setFitView();
+
+                                            // 更新路线信息面板
+                                            updateRouteInfoPanel(result.routes[0],
+                                                typeof start === 'string' ? start : '已选位置',
+                                                typeof end === 'string' ? end : '已选位置');
+
+                                            // 显示规划结果
+                                            const routeItems = document.querySelectorAll('.route-item');
+                                            routeItems.forEach(item => {
+                                                item.style.display = 'block';
+                                            });
+
+                                            resolve(result);
+                                        } catch (drawError) {
+                                            console.error('绘制路线时出错:', drawError);
+                                            reject(new Error('绘制路线失败: ' + drawError.message)); // Reject instead of fallback
+                                        }
+                                    } else {
+                                        console.error('未找到路线结果');
+                                        reject(new Error('未找到合适的路线: ' + (result.info || '未知错误'))); // Reject instead of fallback
+                                    }
+                                } else if (status === 'error') {
+                                    console.error('路线规划失败:', result.info || '未知错误');
+                                    reject(new Error('路线规划失败: ' + (result.info || '未知错误'))); // Reject instead of fallback
+                                } else { // no_data or other statuses
+                                    console.error('路线规划无结果:', status, result.info);
+                                    reject(new Error('路线规划无结果: ' + (result.info || status))); // Reject instead of fallback
+                                }
                             }
+                        );
+                    } catch (error) {
+                        // 发生异常，清除超时
+                        clearTimeout(timeoutId);
+
+                        console.error('JavaScript API路线规划调用出错:', error); // Changed log message
+                         // 重置按钮状态
+                        if (planRouteBtn) {
+                            planRouteBtn.disabled = false;
+                            planRouteBtn.innerHTML = '规划路线';
                         }
-                    );
-                } catch (error) {
-                    // 发生异常，清除超时
-                    clearTimeout(timeoutId);
-                    
-                    console.error('JavaScript API路线规划出错:', error);
+                        reject(new Error('路线规划服务调用失败: ' + error.message)); // Reject instead of fallback
+                    }
+                } else {
+                    // drivingService 不可用
+                    clearTimeout(timeoutId); // Clear timeout if we don't even start the search
+                    console.error('无法执行路线规划：drivingService 不可用或未准备好。'); // Updated log message
                      // 重置按钮状态
                     if (planRouteBtn) {
                         planRouteBtn.disabled = false;
                         planRouteBtn.innerHTML = '规划路线';
                     }
-                    reject(new Error('路线规划服务调用失败: ' + error.message)); // Reject instead of fallback
+                    reject(new Error('驾车服务未准备好'));
                 }
             });
         }

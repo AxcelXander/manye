@@ -222,22 +222,31 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     function initializeSearchFunctionality() {
         const searchForm = document.querySelector('.search-container');
+        console.log('Search form found:', searchForm); // Add log
         // Check if the search form exists on the current page
         if (searchForm) {
             const searchInput = searchForm.querySelector('input');
             const searchButton = searchForm.querySelector('button');
-            
-            searchButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                const searchTerm = searchInput.value.trim();
-                
-                if (searchTerm) {
-                    // In a real app, this would perform a search
-                    alert(`您搜索的内容: "${searchTerm}"，搜索功能将在完整应用中实现！`);
-                } else {
-                    alert('请输入搜索内容');
-                }
-            });
+
+            // Add checks for input and button too
+            if (searchInput && searchButton) {
+                searchButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const searchTerm = searchInput.value.trim();
+                    
+                    if (searchTerm) {
+                        // In a real app, this would perform a search
+                        alert(`您搜索的内容: "${searchTerm}"，搜索功能将在完整应用中实现！`);
+                    } else {
+                        alert('请输入搜索内容');
+                    }
+                });
+            } else {
+                console.warn('Search input or button not found within .search-container');
+            }
+        } else {
+            // Log if search form is not found, but don't throw error
+            console.log('Search container not found on this page, skipping search init.');
         }
     }
     
