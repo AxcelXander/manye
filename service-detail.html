@@ -955,39 +955,6 @@
         // 强制使用JS API密钥来替代Web服务API密钥，因为它可能有更少的域名限制
         window.WEB_SERVICE_API_KEY = JS_API_KEY;
         
-        // 全局检测函数，可在控制台调用：checkApiKey()
-        window.checkApiKey = function() {
-            console.group('🔑 API密钥状态检查');
-            console.log('JS API密钥 (Web端):', JS_API_KEY);
-            console.log('Web服务API密钥:', window.WEB_SERVICE_API_KEY);
-            
-            // 显示域名信息
-            console.log('当前域名:', window.location.hostname);
-            console.log('完整URL:', window.location.href);
-            
-            // 测试API
-            const testGeoURL = `https://restapi.amap.com/v3/geocode/geo?address=北京&key=${window.WEB_SERVICE_API_KEY}`;
-            console.log('测试请求URL:', testGeoURL);
-            
-            fetch(testGeoURL)
-                .then(response => response.json())
-                .then(data => {
-                    console.log('API测试结果:', data);
-                    if (data.status === '1') {
-                        console.log('✅ API密钥正常工作');
-                    } else {
-                        console.error('❌ API密钥错误:', data.info);
-                        console.warn('提示: 在控制台输入 useJsApiForWebService() 尝试使用JS API密钥作为Web服务密钥');
-                    }
-                })
-                .catch(error => {
-                    console.error('❌ API请求失败:', error);
-                })
-                .finally(() => {
-                    console.groupEnd();
-                });
-        };
-        
         // 辅助函数，用于在API密钥问题时切换使用JS API作为Web服务API
         window.useJsApiForWebService = function() {
             window.WEB_SERVICE_API_KEY = JS_API_KEY;
@@ -1309,14 +1276,13 @@
             
             // 设置超时处理
             let timeoutId = setTimeout(() => {
-                console.error('路线规划请求超时，切换到Web服务API');
+                console.error('路线规划请求超时'); // Modify error message
                 if (planRouteBtn) {
                     planRouteBtn.disabled = false;
                     planRouteBtn.innerHTML = '规划路线';
                 }
-                
-                // 使用Web服务API作为备用方案
-                useWebServiceRouting(startPoint, endPoint, planRouteBtn);
+                alert('路线规划请求超时，请检查网络或稍后再试'); // Add user alert
+                // REMOVE Web Service Fallback call
             }, 8000); // 8秒超时
             
             // 首先将地点名称转换为坐标
@@ -1346,18 +1312,17 @@
                         planRouteBtn.innerHTML = '规划路线';
                     }
                     
-                    // 回退到直接使用Web服务API
-                    console.log('尝试使用Web服务API规划路线...');
-                    useWebServiceRouting(startPoint, endPoint, planRouteBtn);
+                    alert('路线规划失败: ' + error.message); // Show error to user
+                    // REMOVE Web Service Fallback call
                 });
         }
         
-        // 地理编码函数 - 使用Web服务API调用
+        // 地理编码函数 - 仅使用 JS API
         function geocodeAddresses(startAddress, endAddress) {
             return new Promise((resolve, reject) => {
                 // 确保AMap已加载
-                if (!window.AMap) {
-                    reject(new Error('高德地图API未加载'));
+                if (!window.AMap || !AMap.plugin) { // Check AMap.plugin exists
+                    reject(new Error('高德地图API或插件功能未加载'));
                     return;
                 }
                 
@@ -1390,121 +1355,22 @@
                                         coordinates.end = result.geocodes[0].location;
                                         resolve(coordinates);
                                     } else {
-                                        // 如果JavaScript API失败，尝试使用Web服务API
-                                        fallbackToWebServiceGeocode(startAddress, endAddress, coordinates)
-                                            .then(resolve)
-                                            .catch(reject);
+                                        reject(new Error('终点地理编码失败: ' + (result.info || '未能找到位置'))); // Reject instead of fallback
                                     }
                                 });
                             } else {
-                                // 如果JavaScript API失败，尝试使用Web服务API
-                                fallbackToWebServiceGeocode(startAddress, endAddress, coordinates)
-                                    .then(resolve)
-                                    .catch(reject);
+                                reject(new Error('起点地理编码失败: ' + (result.info || '未能找到位置'))); // Reject instead of fallback
                             }
                         });
                     });
                 } catch (error) {
-                    console.error('地理编码插件加载失败，尝试使用Web服务API', error);
-                    fallbackToWebServiceGeocode(startAddress, endAddress, {start: null, end: null})
-                        .then(resolve)
-                        .catch(reject);
+                    console.error('地理编码插件加载失败:', error);
+                    reject(new Error('地理编码服务加载失败: ' + error.message)); // Reject instead of fallback
                 }
             });
         }
         
-        // 备用方案：使用Web服务API进行地理编码
-        function fallbackToWebServiceGeocode(startAddress, endAddress, coordinates) {
-            return new Promise((resolve, reject) => {
-                console.log('使用Web服务API进行地理编码');
-                
-                // 使用全局Web服务API密钥
-                console.log('[地理编码]使用的Web服务API密钥:', WEB_SERVICE_API_KEY);
-                
-                // 针对lvxingchina.com域名的特殊处理
-                let apiKey = WEB_SERVICE_API_KEY;
-                if (window.location.hostname.includes('lvxingchina.com')) {
-                    // 如果在lvxingchina.com上，切换到JS API密钥（假设它有更少的域名限制）
-                    apiKey = JS_API_KEY;
-                    console.log('[特殊处理] 在lvxingchina.com上使用替代密钥进行地理编码');
-                }
-                
-                // 首先处理起点
-                if (!coordinates.start) {
-                    // 创建一个AJAX请求来调用Web服务API
-                    const startXhr = new XMLHttpRequest();
-                    startXhr.open('GET', `https://restapi.amap.com/v3/geocode/geo?address=${encodeURIComponent(startAddress)}&key=${apiKey}`, true);
-                    
-                    startXhr.onload = function() {
-                        if (startXhr.status === 200) {
-                            const response = JSON.parse(startXhr.responseText);
-                            console.log('起点Web服务地理编码结果:', response);
-                            
-                            if (response.status === '1' && response.geocodes && response.geocodes.length > 0) {
-                                // 解析经纬度字符串 "116.481499,39.990475"
-                                const locationParts = response.geocodes[0].location.split(',');
-                                coordinates.start = new AMap.LngLat(parseFloat(locationParts[0]), parseFloat(locationParts[1]));
-                                
-                                // 继续处理终点
-                                processEndPoint();
-                            } else {
-                                reject(new Error('起点地理编码失败: ' + (response.info || '未知错误')));
-                            }
-                        } else {
-                            reject(new Error('起点地理编码请求失败: ' + startXhr.status));
-                        }
-                    };
-                    
-                    startXhr.onerror = function() {
-                        reject(new Error('起点地理编码网络错误'));
-                    };
-                    
-                    startXhr.send();
-                } else {
-                    // 如果起点已有坐标，直接处理终点
-                    processEndPoint();
-                }
-                
-                // 处理终点函数
-                function processEndPoint() {
-                    if (!coordinates.end) {
-                        const endXhr = new XMLHttpRequest();
-                        endXhr.open('GET', `https://restapi.amap.com/v3/geocode/geo?address=${encodeURIComponent(endAddress)}&key=${apiKey}`, true);
-                        
-                        endXhr.onload = function() {
-                            if (endXhr.status === 200) {
-                                const response = JSON.parse(endXhr.responseText);
-                                console.log('终点Web服务地理编码结果:', response);
-                                
-                                if (response.status === '1' && response.geocodes && response.geocodes.length > 0) {
-                                    // 解析经纬度字符串
-                                    const locationParts = response.geocodes[0].location.split(',');
-                                    coordinates.end = new AMap.LngLat(parseFloat(locationParts[0]), parseFloat(locationParts[1]));
-                                    
-                                    // 返回完整结果
-                                    resolve(coordinates);
-                                } else {
-                                    reject(new Error('终点地理编码失败: ' + (response.info || '未知错误')));
-                                }
-                            } else {
-                                reject(new Error('终点地理编码请求失败: ' + endXhr.status));
-                            }
-                        };
-                        
-                        endXhr.onerror = function() {
-                            reject(new Error('终点地理编码网络错误'));
-                        };
-                        
-                        endXhr.send();
-                    } else {
-                        // 如果终点已有坐标，直接返回结果
-                        resolve(coordinates);
-                    }
-                }
-            });
-        }
-        
-        // 搜索路线函数
+        // 搜索路线函数 - 仅使用 JS API
         function searchRoute(start, end, planRouteBtn) {
             return new Promise((resolve, reject) => {
                 console.log('开始规划路线，起点:', start, '终点:', end);
@@ -1520,32 +1386,30 @@
                 
                 console.log('格式化后的起点:', startPoint, '终点:', endPoint);
                 
-                // 判断是否应该直接使用Web服务API
+                // 判断是否应该直接使用Web服务API (REMOVE THIS CHECK)
                 if (!window.drivingService || typeof window.drivingService.search !== 'function') {
-                    console.error('驾车服务不可用，直接使用Web服务API');
-                    useWebServiceRouting(startPoint, endPoint, planRouteBtn)
-                        .then(resolve)
-                        .catch(reject);
-                    return;
-                }
-                
-                // 设置计时器，5秒后如果没有响应，直接切换到Web服务API
-                const timeoutId = setTimeout(() => {
-                    console.error('JavaScript API路线规划超时，切换到Web服务API');
-                    
-                    // 重置按钮状态
+                    console.error('驾车服务不可用');
+                     // 重置按钮状态
                     if (planRouteBtn) {
                         planRouteBtn.disabled = false;
                         planRouteBtn.innerHTML = '规划路线';
                     }
-                    
-                    // 直接使用Web服务API
-                    useWebServiceRouting(startPoint, endPoint, planRouteBtn)
-                        .then(resolve)
-                        .catch(reject);
-                }, 5000);
+                    reject(new Error('驾车服务未初始化')); // Reject instead of fallback
+                    return;
+                }
+
+                // 设置计时器，5秒后如果没有响应，报告错误
+                const timeoutId = setTimeout(() => {
+                    console.error('JavaScript API路线规划超时');
+                     // 重置按钮状态
+                    if (planRouteBtn) {
+                        planRouteBtn.disabled = false;
+                        planRouteBtn.innerHTML = '规划路线';
+                    }
+                    reject(new Error('路线规划请求超时')); // Reject instead of fallback
+                }, 8000); // Increase timeout slightly
                 
-                // 先尝试使用JavaScript API规划路线
+                // 尝试使用JavaScript API规划路线
                 try {
                     // 设置驾车参数
                     window.drivingService.search(
@@ -1590,24 +1454,18 @@
                                         resolve(result);
                                     } catch (drawError) {
                                         console.error('绘制路线时出错:', drawError);
-                                        // 使用Web服务API作为备用方案
-                                        useWebServiceRouting(startPoint, endPoint, planRouteBtn)
-                                            .then(resolve)
-                                            .catch(reject);
+                                        reject(new Error('绘制路线失败: ' + drawError.message)); // Reject instead of fallback
                                     }
                                 } else {
-                                    console.error('未找到路线结果，尝试使用Web服务API');
-                                    // 使用Web服务API作为备用方案
-                                    useWebServiceRouting(startPoint, endPoint, planRouteBtn)
-                                        .then(resolve)
-                                        .catch(reject);
+                                    console.error('未找到路线结果');
+                                    reject(new Error('未找到合适的路线: ' + (result.info || '未知错误'))); // Reject instead of fallback
                                 }
-                            } else {
-                                console.error('路线规划失败，尝试使用Web服务API');
-                                // 使用Web服务API作为备用方案
-                                useWebServiceRouting(startPoint, endPoint, planRouteBtn)
-                                    .then(resolve)
-                                    .catch(reject);
+                            } else if (status === 'error') {
+                                console.error('路线规划失败:', result.info || '未知错误');
+                                reject(new Error('路线规划失败: ' + (result.info || '未知错误'))); // Reject instead of fallback
+                            } else { // no_data or other statuses
+                                console.error('路线规划无结果:', status, result.info);
+                                reject(new Error('路线规划无结果: ' + (result.info || status))); // Reject instead of fallback
                             }
                         }
                     );
@@ -1616,333 +1474,14 @@
                     clearTimeout(timeoutId);
                     
                     console.error('JavaScript API路线规划出错:', error);
-                    // 使用Web服务API作为备用方案
-                    useWebServiceRouting(startPoint, endPoint, planRouteBtn)
-                        .then(resolve)
-                        .catch(reject);
-                }
-            });
-        }
-        
-        // 使用Web服务API进行路径规划
-        function useWebServiceRouting(startPoint, endPoint, planRouteBtn) {
-            return new Promise((resolve, reject) => {
-                console.log('使用Web服务API进行路径规划');
-                
-                // 确保按钮显示正在加载状态
-                if (planRouteBtn) {
-                    planRouteBtn.disabled = true;
-                    planRouteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 规划中...';
-                }
-                
-                // 使用全局Web服务API密钥
-                console.log('[路线规划]使用的Web服务API密钥:', window.WEB_SERVICE_API_KEY);
-                
-                // 检测到问题，尝试提供更多的错误处理
-                if (!window.WEB_SERVICE_API_KEY || window.WEB_SERVICE_API_KEY.length < 10) {
-                    console.error('API密钥异常:', window.WEB_SERVICE_API_KEY);
-                    alert('API密钥配置异常，请联系管理员');
+                     // 重置按钮状态
                     if (planRouteBtn) {
                         planRouteBtn.disabled = false;
                         planRouteBtn.innerHTML = '规划路线';
                     }
-                    return Promise.reject(new Error('API密钥配置异常'));
-                }
-                
-                // 针对本地环境的特殊处理
-                let apiKey = window.WEB_SERVICE_API_KEY;
-                
-                // 构建请求URL
-                const reqUrl = `https://restapi.amap.com/v3/direction/driving?origin=${encodeURIComponent(startPoint)}&destination=${encodeURIComponent(endPoint)}&extensions=all&key=${apiKey}`;
-                console.log('[路线规划]请求URL:', reqUrl);
-                
-                try {
-                    // 创建一个AJAX请求来调用Web服务API
-                    const xhr = new XMLHttpRequest();
-                    xhr.open('GET', reqUrl, true);
-                    
-                    // 设置超时处理
-                    const timeoutId = setTimeout(() => {
-                        console.error('Web服务API请求超时');
-                        
-                        // 重置按钮状态
-                        if (planRouteBtn) {
-                            planRouteBtn.disabled = false;
-                            planRouteBtn.innerHTML = '规划路线';
-                        }
-                        
-                        // 显示错误消息
-                        alert('路线规划请求超时，请稍后再试');
-                        reject(new Error('Web服务API请求超时'));
-                    }, 10000); // 10秒超时
-                    
-                    xhr.onload = function() {
-                        // 清除超时
-                        clearTimeout(timeoutId);
-                        
-                        // 重置按钮状态
-                        if (planRouteBtn) {
-                            planRouteBtn.disabled = false;
-                            planRouteBtn.innerHTML = '规划路线';
-                        }
-                        
-                        if (xhr.status === 200) {
-                            try {
-                                const response = JSON.parse(xhr.responseText);
-                                console.log('Web服务路径规划结果:', response);
-                                
-                                if (response.info === 'USERKEY_PLAT_NOMATCH') {
-                                    console.error('API密钥平台不匹配');
-                                    alert('API密钥错误: 无法在当前环境中使用该密钥。这可能是因为您使用的密钥未被允许在当前域名上使用。');
-                                    reject(new Error('API密钥平台不匹配'));
-                                    return;
-                                }
-                                
-                                if (response.status === '1' && response.route && response.route.paths && response.route.paths.length > 0) {
-                                    // 成功获取路径
-                                    const path = response.route.paths[0];
-                                    
-                                    // 如果有地图实例，尝试在地图上绘制路线
-                                    if (window.routeMap) {
-                                        try {
-                                            // 解析路径坐标
-                                            const steps = path.steps;
-                                            const pathCoordinates = [];
-                                            
-                                            steps.forEach(step => {
-                                                const polyline = step.polyline;
-                                                if (polyline) {
-                                                    const points = polyline.split(';');
-                                                    points.forEach(point => {
-                                                        const [lng, lat] = point.split(',');
-                                                        pathCoordinates.push([parseFloat(lng), parseFloat(lat)]);
-                                                    });
-                                                }
-                                            });
-                                            
-                                            console.log('解析了', pathCoordinates.length, '个路径点');
-                                            
-                                            if (pathCoordinates.length === 0) {
-                                                console.error('未能解析到路径坐标');
-                                                throw new Error('未能解析到路径坐标');
-                                            }
-                                            
-                                            // 清除之前的路线
-                                            if (window.drivingService && window.drivingService.clear) {
-                                                window.drivingService.clear();
-                                            }
-                                            
-                                            // 移除之前的直接添加到地图的元素
-                                            window.routeMap.clearMap();
-                                            
-                                            // 重新添加成都的标记
-                                            const chengduMarker = new AMap.Marker({
-                                                position: [104.066801, 30.572961],
-                                                title: '成都',
-                                                map: window.routeMap
-                                            });
-                                            
-                                            // 创建折线
-                                            const polyline = new AMap.Polyline({
-                                                path: pathCoordinates,
-                                                strokeColor: '#3366FF', 
-                                                strokeWeight: 6,
-                                                strokeOpacity: 0.8,
-                                                zIndex: 100,  // 确保路线显示在最上层
-                                                showDir: true // 显示方向
-                                            });
-                                            
-                                            // 添加到地图
-                                            window.routeMap.add(polyline);
-                                            
-                                            // 添加起点和终点标记
-                                            const startMarker = new AMap.Marker({
-                                                position: pathCoordinates[0],
-                                                icon: 'https://webapi.amap.com/theme/v1.3/markers/n/start.png',
-                                                zIndex: 110,  // 比路线高
-                                                offset: new AMap.Pixel(-13, -30)  // 调整偏移，使图标底部中心对齐坐标
-                                            });
-                                            
-                                            const endMarker = new AMap.Marker({
-                                                position: pathCoordinates[pathCoordinates.length - 1],
-                                                icon: 'https://webapi.amap.com/theme/v1.3/markers/n/end.png',
-                                                zIndex: 110,  // 比路线高
-                                                offset: new AMap.Pixel(-13, -30)  // 调整偏移，使图标底部中心对齐坐标
-                                            });
-                                            
-                                            window.routeMap.add([startMarker, endMarker]);
-                                            
-                                            // 调整地图视野
-                                            window.routeMap.setFitView([polyline, startMarker, endMarker]);
-                                            
-                                            // 构建一个兼容JavaScript API的路由对象
-                                            const jsApiCompatibleRoute = {
-                                                distance: parseFloat(path.distance),
-                                                time: parseFloat(path.duration),
-                                                steps: steps.map(step => ({
-                                                    instruction: step.instruction,
-                                                    cities: []
-                                                }))
-                                            };
-                                            
-                                            // 更新路线信息面板
-                                            updateRouteInfoPanel(jsApiCompatibleRoute, 
-                                                typeof startPoint === 'string' ? startPoint : '已选位置', 
-                                                typeof endPoint === 'string' ? endPoint : '已选位置');
-                                            
-                                            // 显示规划结果
-                                            const routeItems = document.querySelectorAll('.route-item');
-                                            routeItems.forEach(item => {
-                                                item.style.display = 'block';
-                                            });
-                                            
-                                            console.log('成功绘制路线');
-                                        } catch (err) {
-                                            console.error('绘制Web服务路线出错:', err);
-                                            
-                                            // 尝试使用更简单的方法显示路线
-                                            fallbackSimpleRouteDisplay(
-                                                startPoint, 
-                                                endPoint, 
-                                                path.distance, 
-                                                path.duration
-                                            );
-                                        }
-                                    } else {
-                                        console.error('地图实例不存在，无法绘制路线');
-                                        fallbackSimpleRouteDisplay(
-                                            startPoint, 
-                                            endPoint, 
-                                            path.distance, 
-                                            path.duration
-                                        );
-                                    }
-                                    
-                                    resolve(response);
-                                } else {
-                                    const errorMsg = response.info || '未找到合适的路线';
-                                    console.error('Web服务API返回错误:', errorMsg);
-                                    alert('路线规划失败: ' + errorMsg);
-                                    reject(new Error('Web服务路径规划失败: ' + errorMsg));
-                                }
-                            } catch (parseError) {
-                                console.error('解析Web服务API响应失败:', parseError, xhr.responseText);
-                                alert('路线规划数据解析失败，请稍后再试');
-                                reject(parseError);
-                            }
-                        } else {
-                            console.error('Web服务API请求失败:', xhr.status, xhr.statusText);
-                            alert('路线规划请求失败: ' + xhr.status);
-                            reject(new Error('Web服务路径规划请求失败: ' + xhr.status));
-                        }
-                    };
-                    
-                    xhr.onerror = function(e) {
-                        // 清除超时
-                        clearTimeout(timeoutId);
-                        
-                        // 重置按钮状态
-                        if (planRouteBtn) {
-                            planRouteBtn.disabled = false;
-                            planRouteBtn.innerHTML = '规划路线';
-                        }
-                        
-                        console.error('Web服务API请求网络错误:', e);
-                        alert('路线规划网络请求失败，请检查网络连接');
-                        reject(new Error('Web服务路径规划网络错误'));
-                    };
-                    
-                    xhr.send();
-                } catch (error) {
-                    console.error('发起Web服务请求出错:', error);
-                    
-                    // 重置按钮状态
-                    if (planRouteBtn) {
-                        planRouteBtn.disabled = false;
-                        planRouteBtn.innerHTML = '规划路线';
-                    }
-                    
-                    alert('发起路线规划请求出错: ' + error.message);
-                    reject(error);
+                    reject(new Error('路线规划服务调用失败: ' + error.message)); // Reject instead of fallback
                 }
             });
-        }
-        
-        // 简单的路线显示备用方案（不依赖地图绘制）
-        function fallbackSimpleRouteDisplay(startPoint, endPoint, distance, duration) {
-            console.log('使用简单显示模式展示路线信息');
-            
-            // 计算耗时（转换为小时和分钟）
-            const totalTime = duration || 0;
-            const hours = Math.floor(totalTime / 3600);
-            const minutes = Math.floor((totalTime % 3600) / 60);
-            const timeString = hours > 0 ? 
-                `${hours}小时${minutes}分钟` : 
-                `${minutes}分钟`;
-            
-            // 计算距离（转换为公里）
-            const distanceKm = ((distance || 0) / 1000).toFixed(1);
-            
-            // 构造简单的路由对象
-            const simpleRoute = {
-                distance: distance,
-                time: duration,
-                steps: [{
-                    instruction: `从${startPoint}出发，行驶约${distanceKm}公里，到达${endPoint}`,
-                    cities: []
-                }]
-            };
-            
-            // 更新路线信息面板
-            updateRouteInfoPanel(simpleRoute, startPoint, endPoint);
-            
-            // 显示规划结果
-            const routeItems = document.querySelectorAll('.route-item');
-            routeItems.forEach(item => {
-                item.style.display = 'block';
-            });
-            
-            // 如果有地图实例，添加简单标记
-            if (window.routeMap) {
-                try {
-                    // 清除地图上的所有覆盖物
-                    window.routeMap.clearMap();
-                    
-                    // 尝试显示简单的起点和终点标记（可能不准确）
-                    const geocoder = new AMap.Geocoder();
-                    
-                    // 地理编码起点
-                    geocoder.getLocation(startPoint, function(status, result) {
-                        if (status === 'complete' && result.geocodes.length) {
-                            const startMarker = new AMap.Marker({
-                                position: result.geocodes[0].location,
-                                title: startPoint,
-                                icon: 'https://webapi.amap.com/theme/v1.3/markers/n/start.png',
-                                offset: new AMap.Pixel(-13, -30)
-                            });
-                            
-                            window.routeMap.add(startMarker);
-                            
-                            // 地理编码终点
-                            geocoder.getLocation(endPoint, function(status, result) {
-                                if (status === 'complete' && result.geocodes.length) {
-                                    const endMarker = new AMap.Marker({
-                                        position: result.geocodes[0].location,
-                                        title: endPoint,
-                                        icon: 'https://webapi.amap.com/theme/v1.3/markers/n/end.png',
-                                        offset: new AMap.Pixel(-13, -30)
-                                    });
-                                    
-                                    window.routeMap.add(endMarker);
-                                    window.routeMap.setFitView();
-                                }
-                            });
-                        }
-                    });
-                } catch (err) {
-                    console.error('简单标记显示失败:', err);
-                }
-            }
         }
         
         // 更新路线信息面板
