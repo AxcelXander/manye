@@ -163,7 +163,7 @@ header {
 /* Hero Section */
 .hero {
     height: 80vh;
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../images/hero-bg.jpg');
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../images/backgrounds/photo-1617014209067-ea13fa8c2ef8.jpg');
     background-size: cover;
     background-position: center;
     color: white;

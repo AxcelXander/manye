@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "http-server",
-    "build": "mkdir -p dist && cp -r *.html public src dist/",
+    "build": "mkdir -p dist && cp -r *.html dist/ && cp -r public dist/ && cp -r src dist/ && mkdir -p dist/images && cp -r public/images/* dist/images/",
     "deploy": "firebase deploy"
   },
   "keywords": [
